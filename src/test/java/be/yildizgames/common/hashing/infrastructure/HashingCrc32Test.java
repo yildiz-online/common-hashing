@@ -10,12 +10,22 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package be.yildizgames.common.hashing;
+package be.yildizgames.common.hashing.infrastructure;
+
+import be.yildizgames.common.hashing.Algorithm;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.nio.file.Path;
+import java.util.List;
 
 /**
  * @author Grégory Van den Borre
  */
-public enum Algorithm {
+class HashingCrc32Test {
 
-    MD5, SHA1, CRC32
+    @Test
+    void testHash() {
+        Assertions.assertEquals("df31953e", new HashingCrc32().compute(Path.of("src/test/resources/circle.png")));
+    }
 }

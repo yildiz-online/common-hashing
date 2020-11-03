@@ -10,12 +10,49 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package be.yildizgames.common.hashing;
+package be.yildizgames.common.hashing.infrastructure;
+
+import be.yildizgames.common.hashing.Formatter;
+import be.yildizgames.common.hashing.Hashing;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.util.zip.CRC32;
 
 /**
  * @author Grégory Van den Borre
  */
-public enum Algorithm {
+public class HashingCrc32 implements Hashing {
 
-    MD5, SHA1, CRC32
+    private final CRC32 crc = new CRC32();
+
+    public HashingCrc32() {
+        super();
+    }
+
+    @Override
+    public String compute(Path path) {
+        try {
+            return compute(Files.newInputStream(path));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public String compute(InputStream stream) {
+        try {
+            byte[] targetArray = new byte[stream.available()];
+            stream.read(targetArray);
+            this.crc.update(targetArray);
+            return Long.toHexString(this.crc.getValue());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }

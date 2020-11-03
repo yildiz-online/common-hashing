@@ -10,12 +10,20 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package be.yildizgames.common.hashing;
+package be.yildizgames.common.hashing.infrastructure;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.nio.file.Path;
 
 /**
  * @author Grégory Van den Borre
  */
-public enum Algorithm {
+class HashingSha1Test {
 
-    MD5, SHA1, CRC32
+    @Test
+    void testHash() {
+        Assertions.assertEquals("fca848cfc54cb07a62fe88b14cde66f5046f4e7f", new HashingSha1().compute(Path.of("src/test/resources/circle.png")));
+    }
 }

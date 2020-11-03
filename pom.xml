@@ -31,11 +31,11 @@
 
   <name>Yildiz-Engine Common Hashing</name>
   <description>Hash and checksums computing on files.</description>
-  <inceptionYear>2018</inceptionYear>
+  <inceptionYear>2020</inceptionYear>
   <url>https://engine.yildiz-games.be</url>
 
   <artifactId>common-hashing</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.1.0-SNAPSHOT</version>
 
   <parent>
     <groupId>be.yildiz-games</groupId>

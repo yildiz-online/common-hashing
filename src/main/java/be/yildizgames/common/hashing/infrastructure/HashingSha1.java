@@ -10,35 +10,49 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package be.yildizgames.common.hashing;
+package be.yildizgames.common.hashing.infrastructure;
 
-import be.yildizgames.common.hashing.infrastructure.HashingCrc32;
-import be.yildizgames.common.hashing.infrastructure.HashingMd5;
-import be.yildizgames.common.hashing.infrastructure.HashingSha1;
+import be.yildizgames.common.hashing.Formatter;
+import be.yildizgames.common.hashing.Hashing;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
 
 /**
  * @author Grégory Van den Borre
  */
-public class HashingFactory {
+public class HashingSha1 implements Hashing {
 
-    private static final Hashing MD5 = new HashingMd5();
-
-    private static final Hashing SHA1 = new HashingSha1();
-
-    private static final Hashing CRC32 = new HashingCrc32();
-
-    private HashingFactory() {
+    public HashingSha1() {
         super();
     }
 
-    public static Hashing get(Algorithm algorithm) {
-        if(algorithm == Algorithm.MD5) {
-            return MD5;
-        } else if (algorithm == Algorithm.SHA1) {
-            return SHA1;
-        } else if (algorithm == Algorithm.CRC32) {
-            return CRC32;
+    @Override
+    public String compute(Path path) {
+        try {
+            return compute(Files.newInputStream(path));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
-        return MD5;
+    }
+
+    @Override
+    public String compute(InputStream stream) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            DigestInputStream dis = new DigestInputStream(stream, md);
+            byte[] buffer = new byte[1024];
+            int read = dis.read(buffer);
+            while (read > -1) {
+                read = dis.read(buffer);
+            }
+            return Formatter.convertToHexa(dis.getMessageDigest().digest());
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
     }
 }
