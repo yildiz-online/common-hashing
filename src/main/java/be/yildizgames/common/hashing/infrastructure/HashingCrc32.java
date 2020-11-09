@@ -12,24 +12,18 @@
 
 package be.yildizgames.common.hashing.infrastructure;
 
-import be.yildizgames.common.hashing.Formatter;
 import be.yildizgames.common.hashing.Hashing;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
 import java.util.zip.CRC32;
 
 /**
  * @author Grégory Van den Borre
  */
 public class HashingCrc32 implements Hashing {
-
-    private final CRC32 crc = new CRC32();
 
     public HashingCrc32() {
         super();
@@ -47,10 +41,11 @@ public class HashingCrc32 implements Hashing {
     @Override
     public String compute(InputStream stream) {
         try {
+            final CRC32 crc = new CRC32();
             byte[] targetArray = new byte[stream.available()];
             stream.read(targetArray);
-            this.crc.update(targetArray);
-            return Long.toHexString(this.crc.getValue());
+            crc.update(targetArray);
+            return String.format("%08x", crc.getValue());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
