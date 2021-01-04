@@ -42,9 +42,16 @@ public class HashingCrc32 implements Hashing {
     public String compute(InputStream stream) {
         try {
             final CRC32 crc = new CRC32();
-            byte[] targetArray = new byte[stream.available()];
-            stream.read(targetArray);
-            crc.update(targetArray);
+            int total = stream.available();
+            int read = 0;
+            byte[] bytes = new byte[total];
+            byte[] buffer = new byte[1024];
+            while(read != total) {
+                int currentRead = stream.read(buffer);
+                System.arraycopy(buffer, 0, bytes, read, currentRead);
+                read += currentRead;
+            }
+            crc.update(bytes);
             return String.format("%08x", crc.getValue());
         } catch (IOException e) {
             throw new IllegalStateException(e);
