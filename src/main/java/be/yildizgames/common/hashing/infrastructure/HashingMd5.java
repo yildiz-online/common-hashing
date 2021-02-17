@@ -57,4 +57,9 @@ public class HashingMd5 implements Hashing {
             throw new IllegalStateException(e);
         }
     }
+
+    @Override
+    public String compute(InputStream stream, int size) {
+        return compute(stream);
+    }
 }

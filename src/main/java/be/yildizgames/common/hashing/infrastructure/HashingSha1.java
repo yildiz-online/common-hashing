@@ -55,4 +55,9 @@ public class HashingSha1 implements Hashing {
             throw new IllegalStateException(e);
         }
     }
+
+    @Override
+    public String compute(InputStream stream, int size) {
+        return compute(stream);
+    }
 }

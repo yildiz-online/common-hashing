@@ -41,12 +41,20 @@ public class HashingCrc32 implements Hashing {
     @Override
     public String compute(InputStream stream) {
         try {
+            return compute(stream, stream.available());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public String compute(InputStream stream, int size) {
+        try {
             final CRC32 crc = new CRC32();
-            int total = stream.available();
             int read = 0;
-            byte[] bytes = new byte[total];
+            byte[] bytes = new byte[size];
             byte[] buffer = new byte[1024];
-            while(read != total) {
+            while(read != size) {
                 int currentRead = stream.read(buffer);
                 System.arraycopy(buffer, 0, bytes, read, currentRead);
                 read += currentRead;

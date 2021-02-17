@@ -24,4 +24,5 @@ public interface Hashing {
 
     String compute(InputStream stream);
 
+    String compute(InputStream stream, int size);
 }
