@@ -21,24 +21,23 @@ import be.yildizgames.common.hashing.infrastructure.HashingSha1;
  */
 public class HashingFactory {
 
-    private static final Hashing MD5 = new HashingMd5();
+    public static final Hashing MD5 = new HashingMd5();
 
-    private static final Hashing SHA1 = new HashingSha1();
+    public static final Hashing SHA1 = new HashingSha1();
 
-    private static final Hashing CRC32 = new HashingCrc32();
+    public static final Hashing CRC32 = new HashingCrc32();
 
     private HashingFactory() {
         super();
     }
 
-    public static Hashing get(Algorithm algorithm) {
-        if(algorithm == Algorithm.MD5) {
-            return MD5;
-        } else if (algorithm == Algorithm.SHA1) {
-            return SHA1;
-        } else if (algorithm == Algorithm.CRC32) {
-            return CRC32;
+    public static Hashing get(Algorithm a) {
+        switch (a) {
+            case MD5: return MD5;
+            case SHA1: return SHA1;
+            case CRC32:
+                return CRC32;
+            default: throw new IllegalArgumentException("Unsupported algorithm: " + a);
         }
-        return MD5;
     }
 }

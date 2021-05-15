@@ -12,21 +12,30 @@
 
 package be.yildizgames.common.hashing;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
  * @author Grégory Van den Borre
  */
-public class ComputedHash {
+public class FileHash {
 
-    private final String hash;
+    private final byte[] bytes;
 
     private final Algorithm algorithm;
 
-    public ComputedHash(String hash, Algorithm algorithm) {
+    public FileHash(byte[] bytes, Algorithm algorithm) {
         super();
-        this.hash = hash;
+        this.bytes = bytes;
         this.algorithm = algorithm;
+    }
+
+    public final byte[] getBytes() {
+        return this.bytes;
+    }
+
+    public final Algorithm getAlgorithm() {
+        return this.algorithm;
     }
 
     @Override
@@ -37,20 +46,14 @@ public class ComputedHash {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ComputedHash that = (ComputedHash) o;
-        return Objects.equals(hash, that.hash) && algorithm == that.algorithm;
+        FileHash fileHash = (FileHash) o;
+        return algorithm == fileHash.algorithm && Arrays.equals(bytes, fileHash.bytes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hash, algorithm);
-    }
-
-    public Algorithm getAlgorithm() {
-        return algorithm;
-    }
-
-    public String getHash() {
-        return hash;
+        int result = Objects.hash(algorithm);
+        result = 31 * result + Arrays.hashCode(bytes);
+        return result;
     }
 }

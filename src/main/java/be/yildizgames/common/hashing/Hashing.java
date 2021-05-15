@@ -20,9 +20,9 @@ import java.nio.file.Path;
  */
 public interface Hashing {
 
-    String compute(Path path);
+    FileHash compute(Path path);
 
-    String compute(InputStream stream);
+    FileHash compute(InputStream stream, int size);
 
-    String compute(InputStream stream, int size);
+    FileHash compute(InputStream stream);
 }

@@ -12,6 +12,7 @@
 
 package be.yildizgames.common.hashing.infrastructure;
 
+import be.yildizgames.common.hashing.Formatter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +25,6 @@ class HashingMd5Test {
 
     @Test
     void testHash() {
-        Assertions.assertEquals("9bd0016b3e59497aa8f3f839d196dd78", new HashingMd5().compute(Path.of("src/test/resources/circle.png")));
+        Assertions.assertEquals("9bd0016b3e59497aa8f3f839d196dd78", Formatter.convertToHexa(new HashingMd5().compute(Path.of("src/test/resources/circle.png"))));
     }
 }

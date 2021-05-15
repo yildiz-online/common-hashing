@@ -12,12 +12,11 @@
 
 package be.yildizgames.common.hashing.infrastructure;
 
-import be.yildizgames.common.hashing.Algorithm;
+import be.yildizgames.common.hashing.Formatter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * @author Grégory Van den Borre
@@ -26,6 +25,6 @@ class HashingCrc32Test {
 
     @Test
     void testHash() {
-        Assertions.assertEquals("df31953e", new HashingCrc32().compute(Path.of("src/test/resources/circle.png")));
+        Assertions.assertEquals("df31953e", Formatter.convertToHexa(new HashingCrc32().compute(Path.of("src/test/resources/circle.png"))));
     }
 }

@@ -12,7 +12,8 @@
 
 package be.yildizgames.common.hashing.infrastructure;
 
-import be.yildizgames.common.hashing.Formatter;
+import be.yildizgames.common.hashing.Algorithm;
+import be.yildizgames.common.hashing.FileHash;
 import be.yildizgames.common.hashing.Hashing;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class HashingSha1 implements Hashing {
     }
 
     @Override
-    public String compute(Path path) {
+    public FileHash compute(Path path) {
         try {
             return compute(Files.newInputStream(path));
         } catch (IOException e) {
@@ -41,7 +42,12 @@ public class HashingSha1 implements Hashing {
     }
 
     @Override
-    public String compute(InputStream stream) {
+    public FileHash compute(InputStream stream, int size) {
+        return compute(stream);
+    }
+
+    @Override
+    public FileHash compute(InputStream stream) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             DigestInputStream dis = new DigestInputStream(stream, md);
@@ -50,14 +56,9 @@ public class HashingSha1 implements Hashing {
             while (read > -1) {
                 read = dis.read(buffer);
             }
-            return Formatter.convertToHexa(dis.getMessageDigest().digest());
+            return new FileHash(dis.getMessageDigest().digest(), Algorithm.SHA1);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    @Override
-    public String compute(InputStream stream, int size) {
-        return compute(stream);
     }
 }

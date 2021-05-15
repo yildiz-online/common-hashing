@@ -12,6 +12,8 @@
 
 package be.yildizgames.common.hashing.infrastructure;
 
+import be.yildizgames.common.hashing.Algorithm;
+import be.yildizgames.common.hashing.FileHash;
 import be.yildizgames.common.hashing.Hashing;
 
 import java.io.IOException;
@@ -30,7 +32,7 @@ public class HashingCrc32 implements Hashing {
     }
 
     @Override
-    public String compute(Path path) {
+    public FileHash compute(Path path) {
         try {
             return compute(Files.newInputStream(path));
         } catch (IOException e) {
@@ -39,7 +41,21 @@ public class HashingCrc32 implements Hashing {
     }
 
     @Override
-    public String compute(InputStream stream) {
+    public FileHash compute(InputStream stream, int size) {
+        var l =  computeLong(stream, size);
+        return new FileHash(new byte[] {
+                    (byte) l,
+                    (byte) (l >> 8),
+                    (byte) (l >> 16),
+                    (byte) (l >> 24),
+                    (byte) (l >> 32),
+                    (byte) (l >> 40),
+                    (byte) (l >> 48),
+                    (byte) (l >> 56)}, Algorithm.CRC32);
+    }
+
+    @Override
+    public FileHash compute(InputStream stream) {
         try {
             return compute(stream, stream.available());
         } catch (IOException e) {
@@ -47,8 +63,15 @@ public class HashingCrc32 implements Hashing {
         }
     }
 
-    @Override
-    public String compute(InputStream stream, int size) {
+    private long computeLong(InputStream stream) {
+        try {
+            return computeLong(stream, stream.available());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private long computeLong(InputStream stream, int size) {
         try {
             final CRC32 crc = new CRC32();
             int read = 0;
@@ -60,7 +83,7 @@ public class HashingCrc32 implements Hashing {
                 read += currentRead;
             }
             crc.update(bytes);
-            return String.format("%08x", crc.getValue());
+            return crc.getValue();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

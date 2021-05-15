@@ -25,13 +25,30 @@ public class Formatter {
         super();
     }
 
-    public static String convertToHexa(byte[] bytes) {
-        byte[] hexChars = new byte[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+    public static String convertToHexa(FileHash hash) {
+        var b = hash.getBytes();
+        if(hash.getAlgorithm() == Algorithm.CRC32) {
+            long l = ((long) b[7] << 56)
+                    | ((long) b[6] & 0xff) << 48
+                    | ((long) b[5] & 0xff) << 40
+                    | ((long) b[4] & 0xff) << 32
+                    | ((long) b[3] & 0xff) << 24
+                    | ((long) b[2] & 0xff) << 16
+                    | ((long) b[1] & 0xff) << 8
+                    | ((long) b[0] & 0xff);
+            return String.format("%08x", l);
+        } else {
+            byte[] hexChars = new byte[b.length * 2];
+            for (int j = 0; j < b.length; j++) {
+                int v = b[j] & 0xFF;
+                hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+                hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+            }
+            return new String(hexChars, StandardCharsets.UTF_8);
         }
-        return new String(hexChars, StandardCharsets.UTF_8);
+    }
+
+    public static FileHash convertToBinary(String hexa, Algorithm algorithm) {
+        return null;
     }
 }

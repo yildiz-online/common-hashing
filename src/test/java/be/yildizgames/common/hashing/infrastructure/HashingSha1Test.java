@@ -12,6 +12,7 @@
 
 package be.yildizgames.common.hashing.infrastructure;
 
+import be.yildizgames.common.hashing.Formatter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +25,6 @@ class HashingSha1Test {
 
     @Test
     void testHash() {
-        Assertions.assertEquals("fca848cfc54cb07a62fe88b14cde66f5046f4e7f", new HashingSha1().compute(Path.of("src/test/resources/circle.png")));
+        Assertions.assertEquals("fca848cfc54cb07a62fe88b14cde66f5046f4e7f", Formatter.convertToHexa(new HashingSha1().compute(Path.of("src/test/resources/circle.png"))));
     }
 }
