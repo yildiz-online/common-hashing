@@ -49,6 +49,25 @@ public class Formatter {
     }
 
     public static FileHash convertToBinary(String hexa, Algorithm algorithm) {
-        return null;
+        if(algorithm == Algorithm.CRC32) {
+            long l = Long.parseLong(hexa,16);
+            return new FileHash(new byte[] {
+                    (byte) l,
+                    (byte) (l >> 8),
+                    (byte) (l >> 16),
+                    (byte) (l >> 24),
+                    (byte) (l >> 32),
+                    (byte) (l >> 40),
+                    (byte) (l >> 48),
+                    (byte) (l >> 56)}, Algorithm.CRC32);
+        } else {
+            int len = hexa.length();
+            byte[] data = new byte[len / 2];
+            for (int i = 0; i < len; i += 2) {
+                data[i / 2] = (byte) ((Character.digit(hexa.charAt(i), 16) << 4)
+                        + Character.digit(hexa.charAt(i + 1), 16));
+            }
+            return new FileHash(data, algorithm);
+        }
     }
 }
